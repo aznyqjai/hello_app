@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170102033529) do
+ActiveRecord::Schema.define(version: 20170102040843) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "enrollments", force: :cascade do |t|
+    t.integer  "game_id"
+    t.integer  "user_id"
+    t.string   "category"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_enrollments_on_game_id", using: :btree
+    t.index ["user_id"], name: "index_enrollments_on_user_id", using: :btree
+  end
 
   create_table "events", force: :cascade do |t|
     t.string   "title"
@@ -26,6 +36,12 @@ ActiveRecord::Schema.define(version: 20170102033529) do
     t.integer "event_id"
     t.index ["event_id"], name: "index_events_users_on_event_id", using: :btree
     t.index ["user_id"], name: "index_events_users_on_user_id", using: :btree
+  end
+
+  create_table "games", force: :cascade do |t|
+    t.string   "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "posts", force: :cascade do |t|
@@ -42,6 +58,8 @@ ActiveRecord::Schema.define(version: 20170102033529) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "enrollments", "games"
+  add_foreign_key "enrollments", "users"
   add_foreign_key "events_users", "events"
   add_foreign_key "events_users", "users"
   add_foreign_key "posts", "users"
